@@ -24,7 +24,7 @@ export const getUsers = async (req: Request, res: Response) => {
       include: {
         followedBy: {
           include: {
-            follow: true,
+            follower: true,
           },
         },
         follows: {

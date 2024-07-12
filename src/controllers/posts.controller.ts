@@ -1,7 +1,6 @@
-import { createPostSchema } from "../utils/postSchema";
+import { createPostSchema, getPostsSchema } from "../utils/postSchema";
 import { Request, Response } from "express";
 import { prisma } from "../db/db.connect";
-import { getPostsSchema } from "../utils/postSchema";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
@@ -10,25 +9,20 @@ export const createPost = async (req: Request, res: Response) => {
     if (!parsedResult.success) {
       return res.status(400).json({
         message: "Invalid request body",
+        errors: parsedResult.error.errors
       });
     }
 
     const { user, title, content, photos, video } = parsedResult.data;
     const authorId = user.id;
 
-    const postData: any = {
+    const postData = {
       title,
       content,
       authorId,
+      photos: photos || undefined,
+      video: video || undefined
     };
-
-    if(photos){
-      postData.photos = photos;
-    }
-
-    if(video){
-      postData.video = video;
-    }
 
     const findUser = await prisma.user.findUnique({
       where: {
@@ -51,6 +45,7 @@ export const createPost = async (req: Request, res: Response) => {
       createdPost,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       message: "Internal Server Error",
       error,
@@ -65,12 +60,14 @@ export const editPost = async (req: Request, res: Response) => {
     if (!parsedResult.success) {
       return res.status(400).json({
         message: "Invalid request body",
+        errors: parsedResult.error.errors
       });
     }
+    
     const { title, content, photos, video } = parsedResult.data;
     const postId = parseInt(req.params.id, 10);
 
-    if (!postId) {
+    if (isNaN(postId)) {
       return res.status(400).json({
         message: "Invalid post id",
       });
@@ -91,17 +88,19 @@ export const editPost = async (req: Request, res: Response) => {
       updatedPost,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      message: [error, "Internal Server Error"],
+      message: "Internal Server Error",
+      error,
     });
   }
 };
 
 export const deletePost = async (req: Request, res: Response) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = parseInt(req.params.id, 10);
 
-    if (!postId) {
+    if (isNaN(postId)) {
       return res.status(400).json({
         message: "Invalid post id",
       });
@@ -115,11 +114,13 @@ export const deletePost = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Post deleted successfully",
-      deletedPost: deletedPost,
+      deletedPost,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      message: [error, "Internal Server Error"],
+      message: "Internal Server Error",
+      error,
     });
   }
 };
