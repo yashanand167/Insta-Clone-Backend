@@ -1,7 +1,6 @@
 import { createPostSchema, getPostsSchema, PostId } from "../utils/postSchema";
 import { Request, Response } from "express";
 import { prisma } from "../db/db.connect";
-import { title } from "process";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
