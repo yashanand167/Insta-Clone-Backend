@@ -35,6 +35,13 @@ export const registerUser = async (req: Request, res: Response) => {
         firstname,
         lastname,
       },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        firstname: true,
+        lastname: true,
+      },
     });
 
     return res.status(200).json({

@@ -20,3 +20,7 @@ export const getPostsSchema = z.object({
   photos: z.string().url().optional(),
   video: z.string().url().optional(),
 });
+
+export const PostId = z.object({
+  id: z.number(),
+});

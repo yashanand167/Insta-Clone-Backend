@@ -7,7 +7,6 @@ import userRouter from "./routes/users.route";
 import { postRouter } from "./routes/posts.route";
 import cors from "cors";
 import helmet from "helmet";
-import methodNotAllowed from "./middleware/methods,middleware";
 dotenv.config();
 
 const app = express();
@@ -19,7 +18,6 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors());
 
-app.use("*", methodNotAllowed);
 app.use("/api/v1", userRouter);
 app.use("/api/v1", postRouter);
 
