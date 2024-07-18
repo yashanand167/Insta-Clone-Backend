@@ -76,7 +76,7 @@ export const editPost = async (req: Request, res: Response) => {
 
     const { title, content } = req.body;
 
-    // Validate input here if needed, e.g., check if title and content are strings
+    
 
     const updatedPost = await prisma.post.update({
       where: {
