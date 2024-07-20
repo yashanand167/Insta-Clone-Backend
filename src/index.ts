@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import userRouter from "./routes/users.route";
 import { postRouter } from "./routes/posts.route";
+import { commentRoute } from "./routes/comment.route";
 import cors from "cors";
 import helmet from "helmet";
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(cors());
 
 app.use("/api/v1", userRouter);
 app.use("/api/v1", postRouter);
+app.use("/api/v1", commentRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({

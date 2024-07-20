@@ -44,7 +44,7 @@ model Post {
 
 model Comment {
   id          Int    @id @default(autoincrement())
-  content     String?
+  content     String
   commentedBy User   @relation("Commented", fields: [commentedById], references: [id])
   commentedById Int
   post        Post   @relation(fields: [postId], references: [id])
