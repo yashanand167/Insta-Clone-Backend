@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getPostsSchema } from "./postSchema";
+
 
 export const registerSchema = z.object({
   email: z.string().email().min(1, "Email is required"),
