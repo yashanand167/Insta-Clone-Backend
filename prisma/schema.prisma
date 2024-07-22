@@ -19,7 +19,7 @@ model User {
   userBio     String?
   createdpost Post[]    @relation("Created")
   savedPost   Post[]    @relation("Posts")
-  likedPost   Post[]    @relation("Liked")
+  likedPost   Like[]    @relation("LikedPosts")
   comments    Comment[] @relation("Commented")
   followedBy  Follow[]  @relation("Followed")
   follows     Follow[]  @relation("Following")
@@ -38,7 +38,7 @@ model Post {
   author    User     @relation("Created", fields: [authorId], references: [id])
   authorId  Int
   savedBy   User[]   @relation("Posts")
-  likedBy   User[]   @relation("Liked")
+  likedBy   Like[]   @relation("LikedPosts")
   comments  Comment[]
 }
 
@@ -49,6 +49,7 @@ model Comment {
   commentedById Int
   post        Post   @relation(fields: [postId], references: [id])
   postId      Int
+  likedBy     Like[] @relation("LikedComments")
 }
 
 model Follow {
@@ -57,6 +58,17 @@ model Follow {
   followerId Int
   following  User @relation("Following", fields: [followingId], references: [id])
   followingId Int
+}
+
+model Like {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation("LikedPosts", fields: [userId], references: [id])
+  userId      Int
+  post        Post?    @relation("LikedPosts", fields: [postId], references: [id])
+  postId      Int?
+  comment     Comment? @relation("LikedComments", fields: [commentId], references: [id])
+  commentId   Int?
+  createdAt   DateTime @default(now())
 }
 
 enum AccountType {
